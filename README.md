@@ -1,4 +1,4 @@
-# CT3Dcellas-1.0.0
+## CT3Dcellas-1.0.0
 
 a non-destructive computed tomography (CT)-based imaging and computational framework for building 3D multi-omics atlases at cellular resolution.
 
