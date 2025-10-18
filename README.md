@@ -7,8 +7,11 @@ This is the beta version showcasing the computational workflow and results of th
 ## Highlights
 
 ●Developed CT3Dcellas, a CT-based framework for constructing high-resolution 3D cellular multi-omics atlas of plant tissues.
+
 ●Generated a multi-omics 3D cell atlas of rice embryos, revealing cell-function gradients along the vascular structure.
+
 ●Introduced a 3D-resolved genome-wide association study (3D-GWAS) to map cells associated with germination traits.
+
 ●Identified a vascular hub region (VA_joint) in rice embryos and uncovered its central role in regulating seed germination.
 
 ## Installation
