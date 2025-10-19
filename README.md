@@ -4,6 +4,12 @@ A non-destructive computed tomography (CT)-based imaging and computational frame
 
 This is the beta version showcasing the computational workflow and results of the **CT3Dcellas framework**. The entire process can fully reproduce the construction of the **3D cellular multi-omics atlas** presented in the article.
 
+## Reference:
+
+**A CT-based 3D cell atlas decoding spatial molecular features of rice embryos**
+
+Nianmin Shang, Jiwei Xu, Fan Xu, Jie Yao, Shenjun Zhu, Yu Wang, June Jiang, Fang Zhang, Yicheng Liu, Dihuai Zheng, Hongyu Chen, Qinjie Chu, Hui Lu, Chu-Yu Ye, Chengcai Chu, Hangjin Jiang, Yinqi Bai, Fan Chen5, Longjiang Fan.
+
 ## Highlights
 
 ●Developed CT3Dcellas, a CT-based framework for constructing high-resolution 3D cellular multi-omics atlas of plant tissues.
