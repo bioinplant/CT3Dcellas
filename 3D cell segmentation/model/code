@@ -1,1 +1,27 @@
-python -m cellpose  --dir G:/snm/embryo3D/24H_AntherS1_2.07um_recon_Export/avizoProj/10originalAngle-3Dtif/final  --diameter 0  --use_gpu --save_png --save_tif --save_outlines --save_flows --save_txt --do_3D --verbose --pretrained_model H:\SHANGNM\3D_building\Raw_data\20230630BJ2um_riceEmbryo\RiceGrain_24H2umDICOM\RiceGrain_24H2umDICOM\traindata7.25-originalPng-4\models\cellpose_residual_on_style_on_concatenation_off_traindata7.25-originalPng-4_2023_07_25_01_58_50.651179
+## train
+python -m cellpose \
+  --train \
+  --dir "H:/SHANGNM/3D_building/Raw_data/20230630BJ2um_riceEmbryo/RiceGrain_24H2umDICOM/RiceGrain_24H2umDICOM/traindata7.25-originalPng-4/" \
+  --pretrained_model None \
+  --learning_rate 0.1 \
+  --weight_decay 1e-05 \
+  --batch_size 8 \
+  --verbose \
+  --use_gpu
+
+
+## segmentation
+python -m cellpose \
+  --dir "G:/snm/embryo3D/24H_AntherS1_2.07um_recon_Export/avizoProj/10originalAngle-3Dtif/final" \
+  --diameter 0 \
+  --use_gpu \
+  --save_png \
+  --save_tif \
+  --save_outlines \
+  --save_flows \
+  --save_txt \
+  --do_3D \
+  --verbose \
+  --pretrained_model "H:/SHANGNM/3D_building/Raw_data/20230630BJ2um_riceEmbryo/RiceGrain_24H2umDICOM/RiceGrain_24H2umDICOM/traindata7.25-originalPng-4/models/cellpose_residual_on_style_on_concatenation_off_traindata7.25-originalPng-4_2023_07_25_01_58_50.651179"
+
+
