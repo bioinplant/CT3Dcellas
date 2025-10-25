@@ -1,15 +1,3 @@
-## train
-python -m cellpose \
-  --train \
-  --dir "H:/SHANGNM/3D_building/Raw_data/20230630BJ2um_riceEmbryo/RiceGrain_24H2umDICOM/RiceGrain_24H2umDICOM/traindata7.25-originalPng-4/" \
-  --pretrained_model None \
-  --learning_rate 0.1 \
-  --weight_decay 1e-05 \
-  --batch_size 8 \
-  --verbose \
-  --use_gpu
-
-
 ## segmentation
 python -m cellpose \
   --dir "G:/snm/embryo3D/24H_AntherS1_2.07um_recon_Export/avizoProj/10originalAngle-3Dtif/final" \
