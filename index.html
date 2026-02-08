@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spateo-like Tutorial - 3D Cell Atlas Analysis</title>
+    <title>3D Cell Atlas Tool - Tutorial</title>
     <!-- 引入Bootstrap（简化样式，生信教程常用） -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入Font Awesome（图标美化） -->
@@ -53,23 +53,31 @@
             font-family: "Consolas", "Monaco", monospace;
             overflow-x: auto;
         }
-        /* 进度条样式（适配代码中的tqdm） */
-        .progress-bar-custom {
-            height: 8px;
-            background-color: #0d6efd;
-            border-radius: 4px;
-            margin: 0.5rem 0;
+        /* 配图样式：仿Spateo教程的图片展示 */
+        .module-img {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 1.5rem 0;
+            border: 1px solid #e9ecef;
+        }
+        .img-caption {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- 左侧导航栏（更新为你指定的英文导航） -->
+            <!-- 左侧导航栏（你指定的模块） -->
             <div class="col-md-3 sidebar">
                 <div class="mb-4">
                     <h4 class="text-primary"><i class="fas fa-dna me-2"></i>3D Cell Atlas Tool</h4>
-                    <p class="text-muted">Spatial-Omics Analysis</p>
+                    <p class="text-muted">空间组学分析教程</p>
                 </div>
                 <nav class="nav flex-column">
                     <a class="nav-link active text-dark" href="#intro">1. Cell segmentation</a>
@@ -80,45 +88,63 @@
                     <a class="nav-link text-dark" href="#faq">6. FAQ</a>
                 </nav>
                 <div class="mt-5 text-muted small">
-                    <p><i class="fas fa-info-circle me-1"></i> Version: v1.0.0</p>
-                    <p><i class="fas fa-github me-1"></i> <a href="#" class="text-muted">GitHub Repository</a></p>
+                    <p><i class="fas fa-info-circle me-1"></i> 版本：v1.0.0</p>
+                    <p><i class="fas fa-github me-1"></i> <a href="#" class="text-muted">GitHub仓库</a></p>
                 </div>
             </div>
 
-            <!-- 右侧主内容区 -->
+            <!-- 右侧主内容区（每个模块添加配图） -->
             <div class="col-md-9">
                 <div class="main-content">
-                    <!-- 1. Cell segmentation -->
+                    <!-- 1. Cell segmentation 模块 + 配图 -->
                     <section id="intro">
                         <h2 class="border-bottom pb-2 mb-4">1. Cell segmentation</h2>
-                        <p>Cell segmentation is the foundational step for 3D cell atlas construction, which identifies and extracts single-cell regions from spatial-omics images (TIF format). This module supports batch processing of multi-section images and outputs cell coordinate information with high precision.</p>
+                        <p>细胞分割是3D细胞图谱构建的基础步骤，从空间组学影像（TIF格式）中识别并提取单细胞区域，本模块支持批量处理多切片影像，高精度输出细胞坐标信息。</p>
+                        
+                        <!-- 模块配图（替换为你的图片链接） -->
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/example/cell_segmentation.png" alt="Cell segmentation result" class="module-img">
+                        <p class="img-caption">图1：细胞分割结果示例（左：原始影像，右：分割后单细胞标注）</p>
+
+                        <div class="note-box">
+                            <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
+                        </div>
                     </section>
 
-                    <!-- 2. Tissue segmentation -->
+                    <!-- 2. Tissue segmentation 模块 + 配图 -->
                     <section id="prepare" class="mt-5">
                         <h2 class="border-bottom pb-2 mb-4">2. Tissue segmentation</h2>
-                        <h5 class="text-secondary">2.1 Environment preparation</h5>
+                        <h5 class="text-secondary">2.1 环境准备</h5>
                         <div class="code-block">
-                            # Recommended conda installation (avoid version conflicts)<br>
+                            # 推荐conda安装（避免版本冲突）<br>
                             conda create -n cell_atlas_env python=3.9 -y<br>
                             conda activate cell_atlas_env<br>
                             conda install -c conda-forge gdal regex tqdm scikit-image -y<br>
-                            # Or pip installation<br>
+                            # 或pip安装<br>
                             pip install gdal regex tqdm glob2 scikit-image
                         </div>
 
-                        <h5 class="text-secondary mt-4">2.2 Test data</h5>
-                        <p>Test data is stored in the <code>test_data/spatial_omics/</code> folder (size ≤ 10MB), including multi-section TIF images (e.g., <code>section_1.tif</code>, <code>section_2.tif</code>) with cell/tissue staining information, which can be used directly without additional download.</p>
+                        <h5 class="text-secondary mt-4">2.2 测试数据</h5>
+                        <p>测试数据存放于 <code>test_data/spatial_omics/</code> 文件夹（体积≤10MB），包含带细胞/组织染色信息的多切片TIF影像（如 <code>section_1.tif</code>、<code>section_2.tif</code>），可直接使用无需额外下载。</p>
+                        
+                        <!-- 模块配图 -->
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/example/tissue_segmentation.png" alt="Tissue segmentation workflow" class="module-img">
+                        <p class="img-caption">图2：组织分割流程（从原始影像到组织区域掩码的完整流程）</p>
                     </section>
 
-                    <!-- 3. Spatial-omics section registration -->
+                    <!-- 3. Spatial-omics section registration 模块 + 配图 -->
                     <section id="core-func" class="mt-5">
                         <h2 class="border-bottom pb-2 mb-4">3. Spatial-omics section registration</h2>
-                        <h5 class="text-secondary">3.1 Core function: register_sections()</h5>
-                        <p>Aligns multi-section spatial-omics images to the same coordinate system, correcting spatial offsets between sections to lay the foundation for 3D reconstruction.</p>
+                        <h5 class="text-secondary">3.1 核心功能：register_sections()</h5>
+                        <p>将多切片空间组学影像对齐到同一坐标系，校正切片间的空间偏移，为3D重建奠定基础。</p>
+                        
+                        <!-- 模块配图 -->
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/example/section_registration.png" alt="Section registration result" class="module-img">
+                        <p class="img-caption">图3：切片配准效果（上：配准前偏移的切片，下：配准后对齐的切片）</p>
+
                         <div class="note-box">
-                            <p><i class="fas fa-lightbulb me-2"></i> <strong>Note</strong>: Complete parameter description: Run <code>【Software Name】 --help</code> to view all parameters (only core parameters are marked in the Tutorial to avoid redundancy);</p>
+                            <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
                         </div>
+                        
                         <div class="code-block">
                             import glob<br>
                             import gdal<br>
@@ -128,115 +154,120 @@
                             <br>
                             def register_sections(folder_path, ref_section="section_1.tif"):<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;"""<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Register multi-section spatial-omics images to reference section<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;将多切片空间组学影像配准到参考切片<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;"""<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;tif_files = glob.glob(folder_path + '*.tif')<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;if not tif_files:<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise FileNotFoundError("No .tif files found in the specified folder.")<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;# Core registration logic (omitted, see GitHub for complete code)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise FileNotFoundError("指定文件夹中未找到.tif文件")<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;# 核心配准逻辑（完整代码见GitHub）<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;return registered_data
                         </div>
                     </section>
 
-                    <!-- 4. 3D cell atlas construction -->
+                    <!-- 4. 3D cell atlas construction 模块 + 配图 -->
                     <section id="params" class="mt-5">
                         <h2 class="border-bottom pb-2 mb-4">4. 3D cell atlas construction</h2>
+                        
+                        <!-- 模块配图 -->
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/example/3d_cell_atlas.png" alt="3D cell atlas construction" class="module-img">
+                        <p class="img-caption">图4：3D细胞图谱构建结果（左：切片堆叠，右：3D可视化图谱）</p>
+
                         <div class="note-box">
-                            <p><i class="fas fa-lightbulb me-2"></i> <strong>Note</strong>: Complete parameter description: Run <code>【Software Name】 --help</code> to view all parameters (only core parameters are marked in the Tutorial to avoid redundancy);</p>
+                            <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
                         </div>
 
                         <div class="param-card">
-                            <h5>Core parameters (Required)</h5>
+                            <h5>核心参数（必填）</h5>
                             <table class="table table-sm mt-2">
                                 <thead>
                                     <tr>
-                                        <th>Parameter</th>
-                                        <th>Type</th>
-                                        <th>Description</th>
-                                        <th>Example</th>
+                                        <th>参数名</th>
+                                        <th>类型</th>
+                                        <th>说明</th>
+                                        <th>示例</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>folder_path</td>
                                         <td>str</td>
-                                        <td>Path to folder containing multi-section TIF files (end with /)</td>
+                                        <td>存放多切片TIF文件的文件夹路径（末尾带/）</td>
                                         <td>./test_data/spatial_omics/</td>
                                     </tr>
                                     <tr>
                                         <td>output_prefix</td>
                                         <td>str</td>
-                                        <td>Prefix of output 3D atlas file</td>
+                                        <td>输出3D图谱文件的前缀名</td>
                                         <td>3D_cell_atlas</td>
                                     </tr>
                                     <tr>
                                         <td>ref_section</td>
                                         <td>str</td>
-                                        <td>Reference section for registration (optional, default: section_1.tif)</td>
+                                        <td>配准参考切片（可选，默认：section_1.tif）</td>
                                         <td>section_5.tif</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <h5 class="text-secondary mt-4">View complete parameters</h5>
+                        <h5 class="text-secondary mt-4">查看完整参数</h5>
                         <div class="code-block">
-                            # Run in terminal to view all parameters and descriptions<br>
-                            【Software Name】 --help<br>
+                            # 终端运行以下命令，查看所有参数及说明<br>
+                            【软件名称】 --help<br>
                             <br>
-                            # Or view complete function documentation (Python environment)<br>
-                            import 【Software Name】<br>
-                            help(【Software Name】.build_3D_atlas)
+                            # 或查看函数完整文档（Python环境）<br>
+                            import 【软件名称】<br>
+                            help(【软件名称】.build_3D_atlas)
                         </div>
                     </section>
 
-                    <!-- 5. Usage examples -->
+                    <!-- 5. Usage examples 模块 -->
                     <section id="example" class="mt-5">
                         <h2 class="border-bottom pb-2 mb-4">5. Usage examples</h2>
-                        <h5 class="text-secondary">5.1 Python script call</h5>
+                        <h5 class="text-secondary">5.1 Python脚本调用</h5>
                         <div class="code-block">
-                            # Use only core parameters (see --help for complete parameters)<br>
-                            from 【Software Name】 import build_3D_atlas<br>
+                            # 仅使用核心参数（完整参数见--help）<br>
+                            from 【软件名称】 import build_3D_atlas<br>
                             <br>
                             output_path = build_3D_atlas(<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;folder_path="./test_data/spatial_omics/",<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;output_prefix="3D_cell_atlas"<br>
                             )<br>
-                            print(f"3D atlas saved to: {output_path}")
+                            print(f"3D图谱保存至：{output_path}")
                         </div>
 
-                        <h5 class="text-secondary mt-4">5.2 Command line call</h5>
+                        <h5 class="text-secondary mt-4">5.2 命令行调用</h5>
                         <div class="code-block">
-                            # Use only core parameters (see --help for complete parameters)<br>
-                            【Software Name】 build_3D_atlas --folder_path ./test_data/spatial_omics/ --output_prefix 3D_cell_atlas
+                            # 仅使用核心参数（完整参数见--help）<br>
+                            【软件名称】 build_3D_atlas --folder_path ./test_data/spatial_omics/ --output_prefix 3D_cell_atlas
                         </div>
                     </section>
 
-                    <!-- 6. FAQ -->
+                    <!-- 6. FAQ 模块 -->
                     <section id="faq" class="mt-5">
                         <h2 class="border-bottom pb-2 mb-4">6. FAQ</h2>
                         <div class="accordion" id="faqAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                        Q1: What to do if "No .tif files found" is prompted?
+                                        Q1: 运行提示"No .tif files found"怎么办？
                                     </button>
                                 </h2>
                                 <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
-                                        Check if the <code>folder_path</code> is correct (must end with /), and ensure there are .tif suffix files in the folder (case-sensitive, e.g., rename .TIF to .tif).
+                                        检查<code>folder_path</code>路径是否正确（末尾需带/），且文件夹内是否有.tif后缀的文件（区分大小写，如.TIF需改为.tif）。
                                     </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                        Q2: How to view the complete parameter list?
+                                        Q2: 如何查看完整参数列表？
                                     </button>
                                 </h2>
                                 <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
-                                        Run <code>【Software Name】 --help</code> in the terminal, or execute <code>help(【Software Name】.build_3D_atlas)</code> in the Python environment to view all parameters (including optional parameters, default values, and exception handling rules).
+                                        终端运行<code>【软件名称】 --help</code>，或在Python环境中执行<code>help(【软件名称】.build_3D_atlas)</code>，可查看所有参数（含可选参数、默认值、异常处理规则）。
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +275,7 @@
                     </section>
 
                     <footer class="mt-5 pt-4 border-top">
-                        <p class="text-muted text-center">© 2026 3D Cell Atlas Tool Tutorial | Adapted for Spatial-Omics Analysis</p>
+                        <p class="text-muted text-center">© 2026 3D Cell Atlas Tool 教程 | 适配空间组学/3D细胞图谱分析</p>
                     </footer>
                 </div>
             </div>
