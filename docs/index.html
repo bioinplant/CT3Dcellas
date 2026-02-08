@@ -1,4 +1,4 @@
-<!-- 新增：Tutorials卡片网格（仿Spateo布局） -->
+<!-- 新增：Tutorials卡片网格（仿Spateo布局 + 固定图片尺寸） -->
 <section id="tutorial-cards" class="mt-4">
     <h2 class="border-bottom pb-2 mb-4">Tutorials</h2>
     <p>This page provides links to handy step-by-step tutorials for key features of your tool. Click on any of the cards below to be taken to a Jupyter Notebook render of the specified tutorial. You may also view the original Jupyter Notebook by clicking on the link at the top of each tutorial.</p>
@@ -9,7 +9,8 @@
         <div class="col-md-3">
             <a href="#intro" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="cell_segmentation.png" class="card-img-top" alt="Cell segmentation">
+                    <!-- 固定图片尺寸：宽100%，高200px，自动裁剪/拉伸适配 -->
+                    <img src="cell_segmentation.png" class="card-img-top" alt="Cell segmentation" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Cell segmentation</h5>
                     </div>
@@ -19,7 +20,7 @@
         <div class="col-md-3">
             <a href="#prepare" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="tissue_segmentation.png" class="card-img-top" alt="Tissue segmentation">
+                    <img src="tissue_segmentation.png" class="card-img-top" alt="Tissue segmentation" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Tissue segmentation</h5>
                     </div>
@@ -29,7 +30,7 @@
         <div class="col-md-3">
             <a href="#core-func" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="section_registration.png" class="card-img-top" alt="Spatial-omics section registration">
+                    <img src="section_registration.png" class="card-img-top" alt="Spatial-omics section registration" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Spatial-omics section registration</h5>
                     </div>
@@ -39,7 +40,7 @@
         <div class="col-md-3">
             <a href="#params" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="3d_cell_atlas.png" class="card-img-top" alt="3D cell atlas construction">
+                    <img src="3d_cell_atlas.png" class="card-img-top" alt="3D cell atlas construction" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">3D cell atlas construction</h5>
                     </div>
@@ -51,7 +52,7 @@
         <div class="col-md-3">
             <a href="#example" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/usage_examples.png" class="card-img-top" alt="Usage examples">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/usage_examples.png" class="card-img-top" alt="Usage examples" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Usage examples</h5>
                     </div>
@@ -61,7 +62,7 @@
         <div class="col-md-3">
             <a href="#faq" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/faq.png" class="card-img-top" alt="FAQ">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/faq.png" class="card-img-top" alt="FAQ" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">FAQ</h5>
                     </div>
@@ -71,7 +72,7 @@
         <div class="col-md-3">
             <a href="#deploy" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/github_pages.png" class="card-img-top" alt="GitHub Pages deployment">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/github_pages.png" class="card-img-top" alt="GitHub Pages deployment" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">GitHub Pages deployment</h5>
                     </div>
@@ -81,7 +82,7 @@
         <div class="col-md-3">
             <a href="#notebook" class="text-decoration-none text-dark">
                 <div class="card h-100 border rounded shadow-sm">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/jupyter_notebook.png" class="card-img-top" alt="Jupyter Notebook">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/example/jupyter_notebook.png" class="card-img-top" alt="Jupyter Notebook" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Jupyter Notebook</h5>
                     </div>
@@ -91,6 +92,6 @@
     </div>
 
     <div class="note-box mt-4">
-        <p><<i class="fas fa-lightbulb me-2"></</i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
+        <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
     </div>
 </section>
