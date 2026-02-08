@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spateo-like Tutorial - 3D Cell Atlas Analysis</title>
+    <!-- 引入Bootstrap（简化样式，生信教程常用） -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome（图标美化） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义样式，贴近Spateo教程风格 */
+        body {
+            font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            padding-top: 2rem;
+        }
+        .main-content {
+            padding: 2rem 3rem;
+            background-color: #fff;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .param-card {
+            border-left: 4px solid #0d6efd;
+            background-color: #f1f8ff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        .note-box {
+            border-left: 4px solid #ffc107;
+            background-color: #fff8e1;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+        }
+        /* 进度条样式（适配代码中的tqdm） */
+        .progress-bar-custom {
+            height: 8px;
+            background-color: #0d6efd;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧导航栏（更新为你指定的英文导航） -->
+            <div class="col-md-3 sidebar">
+                <div class="mb-4">
+                    <h4 class="text-primary"><i class="fas fa-dna me-2"></i>3D Cell Atlas Tool</h4>
+                    <p class="text-muted">Spatial-Omics Analysis</p>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active text-dark" href="#intro">1. Cell segmentation</a>
+                    <a class="nav-link text-dark" href="#prepare">2. Tissue segmentation</a>
+                    <a class="nav-link text-dark" href="#core-func">3. Spatial-omics section registration</a>
+                    <a class="nav-link text-dark" href="#params">4. 3D cell atlas construction</a>
+                    <a class="nav-link text-dark" href="#example">5. Usage examples</a>
+                    <a class="nav-link text-dark" href="#faq">6. FAQ</a>
+                </nav>
+                <div class="mt-5 text-muted small">
+                    <p><i class="fas fa-info-circle me-1"></i> Version: v1.0.0</p>
+                    <p><i class="fas fa-github me-1"></i> <a href="#" class="text-muted">GitHub Repository</a></p>
+                </div>
+            </div>
+
+            <!-- 右侧主内容区 -->
+            <div class="col-md-9">
+                <div class="main-content">
+                    <!-- 1. Cell segmentation -->
+                    <section id="intro">
+                        <h2 class="border-bottom pb-2 mb-4">1. Cell segmentation</h2>
+                        <p>Cell segmentation is the foundational step for 3D cell atlas construction, which identifies and extracts single-cell regions from spatial-omics images (TIF format). This module supports batch processing of multi-section images and outputs cell coordinate information with high precision.</p>
+                    </section>
+
+                    <!-- 2. Tissue segmentation -->
+                    <section id="prepare" class="mt-5">
+                        <h2 class="border-bottom pb-2 mb-4">2. Tissue segmentation</h2>
+                        <h5 class="text-secondary">2.1 Environment preparation</h5>
+                        <div class="code-block">
+                            # Recommended conda installation (avoid version conflicts)<br>
+                            conda create -n cell_atlas_env python=3.9 -y<br>
+                            conda activate cell_atlas_env<br>
+                            conda install -c conda-forge gdal regex tqdm scikit-image -y<br>
+                            # Or pip installation<br>
+                            pip install gdal regex tqdm glob2 scikit-image
+                        </div>
+
+                        <h5 class="text-secondary mt-4">2.2 Test data</h5>
+                        <p>Test data is stored in the <code>test_data/spatial_omics/</code> folder (size ≤ 10MB), including multi-section TIF images (e.g., <code>section_1.tif</code>, <code>section_2.tif</code>) with cell/tissue staining information, which can be used directly without additional download.</p>
+                    </section>
+
+                    <!-- 3. Spatial-omics section registration -->
+                    <section id="core-func" class="mt-5">
+                        <h2 class="border-bottom pb-2 mb-4">3. Spatial-omics section registration</h2>
+                        <h5 class="text-secondary">3.1 Core function: register_sections()</h5>
+                        <p>Aligns multi-section spatial-omics images to the same coordinate system, correcting spatial offsets between sections to lay the foundation for 3D reconstruction.</p>
+                        <div class="note-box">
+                            <p><i class="fas fa-lightbulb me-2"></i> <strong>Note</strong>: Complete parameter description: Run <code>【Software Name】 --help</code> to view all parameters (only core parameters are marked in the Tutorial to avoid redundancy);</p>
+                        </div>
+                        <div class="code-block">
+                            import glob<br>
+                            import gdal<br>
+                            import re<br>
+                            from tqdm import tqdm<br>
+                            from skimage import registration<br>
+                            <br>
+                            def register_sections(folder_path, ref_section="section_1.tif"):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"""<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Register multi-section spatial-omics images to reference section<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"""<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;tif_files = glob.glob(folder_path + '*.tif')<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if not tif_files:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise FileNotFoundError("No .tif files found in the specified folder.")<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;# Core registration logic (omitted, see GitHub for complete code)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;return registered_data
+                        </div>
+                    </section>
+
+                    <!-- 4. 3D cell atlas construction -->
+                    <section id="params" class="mt-5">
+                        <h2 class="border-bottom pb-2 mb-4">4. 3D cell atlas construction</h2>
+                        <div class="note-box">
+                            <p><i class="fas fa-lightbulb me-2"></i> <strong>Note</strong>: Complete parameter description: Run <code>【Software Name】 --help</code> to view all parameters (only core parameters are marked in the Tutorial to avoid redundancy);</p>
+                        </div>
+
+                        <div class="param-card">
+                            <h5>Core parameters (Required)</h5>
+                            <table class="table table-sm mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Example</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>folder_path</td>
+                                        <td>str</td>
+                                        <td>Path to folder containing multi-section TIF files (end with /)</td>
+                                        <td>./test_data/spatial_omics/</td>
+                                    </tr>
+                                    <tr>
+                                        <td>output_prefix</td>
+                                        <td>str</td>
+                                        <td>Prefix of output 3D atlas file</td>
+                                        <td>3D_cell_atlas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ref_section</td>
+                                        <td>str</td>
+                                        <td>Reference section for registration (optional, default: section_1.tif)</td>
+                                        <td>section_5.tif</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h5 class="text-secondary mt-4">View complete parameters</h5>
+                        <div class="code-block">
+                            # Run in terminal to view all parameters and descriptions<br>
+                            【Software Name】 --help<br>
+                            <br>
+                            # Or view complete function documentation (Python environment)<br>
+                            import 【Software Name】<br>
+                            help(【Software Name】.build_3D_atlas)
+                        </div>
+                    </section>
+
+                    <!-- 5. Usage examples -->
+                    <section id="example" class="mt-5">
+                        <h2 class="border-bottom pb-2 mb-4">5. Usage examples</h2>
+                        <h5 class="text-secondary">5.1 Python script call</h5>
+                        <div class="code-block">
+                            # Use only core parameters (see --help for complete parameters)<br>
+                            from 【Software Name】 import build_3D_atlas<br>
+                            <br>
+                            output_path = build_3D_atlas(<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;folder_path="./test_data/spatial_omics/",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;output_prefix="3D_cell_atlas"<br>
+                            )<br>
+                            print(f"3D atlas saved to: {output_path}")
+                        </div>
+
+                        <h5 class="text-secondary mt-4">5.2 Command line call</h5>
+                        <div class="code-block">
+                            # Use only core parameters (see --help for complete parameters)<br>
+                            【Software Name】 build_3D_atlas --folder_path ./test_data/spatial_omics/ --output_prefix 3D_cell_atlas
+                        </div>
+                    </section>
+
+                    <!-- 6. FAQ -->
+                    <section id="faq" class="mt-5">
+                        <h2 class="border-bottom pb-2 mb-4">6. FAQ</h2>
+                        <div class="accordion" id="faqAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        Q1: What to do if "No .tif files found" is prompted?
+                                    </button>
+                                </h2>
+                                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        Check if the <code>folder_path</code> is correct (must end with /), and ensure there are .tif suffix files in the folder (case-sensitive, e.g., rename .TIF to .tif).
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        Q2: How to view the complete parameter list?
+                                    </button>
+                                </h2>
+                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        Run <code>【Software Name】 --help</code> in the terminal, or execute <code>help(【Software Name】.build_3D_atlas)</code> in the Python environment to view all parameters (including optional parameters, default values, and exception handling rules).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="mt-5 pt-4 border-top">
+                        <p class="text-muted text-center">© 2026 3D Cell Atlas Tool Tutorial | Adapted for Spatial-Omics Analysis</p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS（支持折叠/交互） -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
