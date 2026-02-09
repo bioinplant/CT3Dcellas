@@ -13,15 +13,14 @@
             padding: 2rem;
             background-color: #f8f9fa;
         }
-        /* 卡片网格：一行4个（大屏）/一行2个（平板）/一行1个（手机） */
+        /* 主教程卡片网格：一行4个（大屏）/一行2个（平板）/一行1个（手机） */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 一行4个：250px/列 */
-            /* 若要一行3个，改为：grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
-            gap: 1.5rem; /* 卡片间距 */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
             margin-top: 1.5rem;
         }
-        /* 卡片样式 */
+        /* 主教程卡片样式 */
         .tutorial-card {
             border: 1px solid #e9ecef;
             border-radius: 8px;
@@ -30,6 +29,7 @@
             text-decoration: none;
             color: #333;
             height: 100%;
+            display: block; /* 修复点击区域不全问题 */
         }
         .tutorial-card:hover {
             transform: translateY(-5px);
@@ -38,7 +38,7 @@
         /* 正方形图片：宽高1:1 */
         .square-img {
             width: 100%;
-            padding-top: 100%; /* 关键：通过内边距实现正方形，宽高比1:1 */
+            padding-top: 100%;
             position: relative;
             overflow: hidden;
         }
@@ -48,7 +48,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 图片填满正方形，不变形 */
+            object-fit: cover;
         }
         /* 卡片内容 */
         .card-content {
@@ -68,17 +68,89 @@
             margin: 1.5rem 0;
             border-radius: 4px;
         }
+
+        /* 新增：视频模块样式 */
+        /* 视频模块容器（默认隐藏，点击后显示） */
+        #tissue-seg {
+            margin-top: 3rem;
+            display: none; /* 默认隐藏 */
+        }
+        /* 视频卡片网格：一行4个，和主卡片布局一致 */
+        .video-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        /* 视频卡片样式 */
+        .video-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: #333;
+            height: 100%;
+            display: block;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        /* 视频预览图（正方形） */
+        .video-thumbnail {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 播放图标叠加 */
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        /* 视频播放容器 */
+        .video-player-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #fff;
+            display: none; /* 默认隐藏 */
+        }
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 class="border-bottom pb-2 mb-4">Tutorials</h2>
-        <p>This page provides links to handy step-by-step tutorials for key features of your tool. Click on any of the cards below to be taken to a Jupyter Notebook render of the specified tutorial.</p>
+        <h2 class="border-bottom pb-2 mb-4">Welcome to CT3Dcellas!</h2>
+        <p>This page provides links to handy step-by-step tutorials for CT3Dcellas workflow. Click on any of the cards below to be taken to a Jupyter Notebook render of the specified tutorial.</p>
 
-        <!-- 核心：卡片网格（一行4个） -->
+        <!-- 核心：主教程卡片网格（一行4个） -->
         <div class="card-grid">
             <!-- 卡片1 -->
-            <a href="#cell-seg" class="tutorial-card">
+            <a href="https://github.com/bioinplant/CT3Dcellas/blob/main/docs/01_2_VA_side_axis_trajectory.ipynb" 
+            class="tutorial-card"
+            target="_blank">
                 <div class="square-img">
                     <img src="cell_segmentation.png" alt="Cell segmentation">
                 </div>
@@ -86,8 +158,8 @@
                     <h5 class="card-title">Cell segmentation</h5>
                 </div>
             </a>
-            <!-- 卡片2 -->
-            <a href="#tissue-seg" class="tutorial-card">
+            <!-- 卡片2：点击展开视频模块 -->
+            <a href="javascript:void(0)" onclick="showTissueSegVideos()" class="tutorial-card">
                 <div class="square-img">
                     <img src="tissue_segmentation.png" alt="Tissue segmentation">
                 </div>
@@ -96,7 +168,9 @@
                 </div>
             </a>
             <!-- 卡片3 -->
-            <a href="#section-reg" class="tutorial-card">
+            <a href="https://github.com/bioinplant/CT3Dcellas/blob/main/docs/Spatial-omics%20section%20registration/HAI24_1_bin1.ipynb" 
+            class="tutorial-card"
+            target="_blank">
                 <div class="square-img">
                     <img src="section_registration.png" alt="Spatial-omics section registration">
                 </div>
@@ -114,39 +188,12 @@
                 </div>
             </a>
             <!-- 卡片5（第二行自动排列） -->
-            <a href="#usage" class="tutorial-card">
+            <a href="https://unconvictive-sarita-oracularly.ngrok-free.dev" class="tutorial-card" target="_blank">
                 <div class="square-img">
-                    <img src="usage_examples.png" alt="Usage examples">
+                    <img src="interactive_tools.png" alt="3D Cell Atlas Viewer">
                 </div>
                 <div class="card-content">
-                    <h5 class="card-title">Usage examples</h5>
-                </div>
-            </a>
-            <!-- 卡片6 -->
-            <a href="#faq" class="tutorial-card">
-                <div class="square-img">
-                    <img src="faq.png" alt="FAQ">
-                </div>
-                <div class="card-content">
-                    <h5 class="card-title">FAQ</h5>
-                </div>
-            </a>
-            <!-- 卡片7 -->
-            <a href="#deploy" class="tutorial-card">
-                <div class="square-img">
-                    <img src="github_pages.png" alt="GitHub Pages deployment">
-                </div>
-                <div class="card-content">
-                    <h5 class="card-title">GitHub Pages deployment</h5>
-                </div>
-            </a>
-            <!-- 卡片8 -->
-            <a href="#notebook" class="tutorial-card">
-                <div class="square-img">
-                    <img src="jupyter_notebook.png" alt="Jupyter Notebook">
-                </div>
-                <div class="card-content">
-                    <h5 class="card-title">Jupyter Notebook</h5>
+                    <h5 class="card-title">3D Cell Atlas Viewer</h5>
                 </div>
             </a>
         </div>
@@ -155,8 +202,115 @@
         <div class="note-box">
             <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
         </div>
+
+        <!-- 新增：Tissue segmentation视频模块（默认隐藏） -->
+        <section id="tissue-seg">
+            <h3 class="border-bottom pb-2 mb-3">Tissue Segmentation Tutorial Videos</h3>
+            <p>Step-by-step video tutorials for tissue segmentation workflow (click to play):</p>
+
+            <!-- 视频卡片网格：一行4个，按顺序排列 -->
+            <div class="video-card-grid">
+                <!-- 视频1：替换为你的视频路径和预览图 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/03.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step1_thumb.png" alt="Step 1: Data Import">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 1: Data Import</h5>
+                    </div>
+                </a>
+                <!-- 视频2 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/04.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step2_thumb.png" alt="Step 2: Ortho Slice Visualization">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 2: Ortho Slice Visualization</h5>
+                    </div>
+                </a>
+                <!-- 视频3 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/05.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step3_thumb.png" alt="Step 3: Volume Rendering">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 3: Volume Rendering</h5>
+                    </div>
+                </a>
+                <!-- 视频4 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/06.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step4_thumb.png" alt="Step 4: Edit New Label fields">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 4: Edit New Label fields</h5>
+                    </div>
+                </a>
+                <!-- 更多视频自动排到下一行 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/07.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step5_thumb.png" alt="Step 5: Add Tissue Objects">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 5: Add Tissue Objects</h5>
+                    </div>
+                </a>                
+                <!-- 更多视频自动排到下一行 -->
+                <a href="javascript:void(0)" onclick="playVideo('https://github.com/bioinplant/CT3Dcellas/raw/main/docs/Tissue%20segmentation/08.mp4')" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="tissue_seg_step5_thumb.png" alt="Step 5: Validation">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Step 5: Validation</h5>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 视频播放容器 -->
+            <div id="videoPlayerContainer" class="video-player-container">
+                <video id="videoPlayer" class="video-player" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <!-- 重复保留参数说明文案 -->
+            <div class="note-box mt-4">
+                <p><i class="fas fa-lightbulb me-2"></i> <strong>提示</strong>：完整参数说明：运行 【软件名称】 --help 查看所有参数（Tutorial中仅标注核心参数，避免冗余）；</p>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 显示Tissue Segmentation视频模块
+        function showTissueSegVideos() {
+            const videoSection = document.getElementById('tissue-seg');
+            videoSection.style.display = 'block';
+            // 滚动到视频模块位置
+            videoSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 播放选中的视频
+        function playVideo(videoSrc) {
+            const playerContainer = document.getElementById('videoPlayerContainer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            // 设置视频源并显示播放容器
+            videoPlayer.src = videoSrc;
+            playerContainer.style.display = 'block';
+            // 自动播放（需静音，浏览器限制）
+            videoPlayer.muted = false; // 如需自动播放改为true
+            videoPlayer.play();
+            // 滚动到视频播放器位置
+            playerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
